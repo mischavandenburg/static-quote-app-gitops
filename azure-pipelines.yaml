@@ -3,8 +3,14 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+# trigger:
+# - main
+
+resources:
+  pipelines:
+  - pipeline: image-build-pipeline # Name of the pipeline resource.
+    source:  mischavandenburg.static-quote-app # The name of the pipeline referenced by this pipeline resource.
+    trigger: true # Run app-ci pipeline when any run of security-lib-ci completes
 
 variables:
 - group: mischa-quote
@@ -23,14 +29,6 @@ stages:
         - checkout: self
           persistCredentials: true
           clean: true
-        - bash: |
-            az pipelines variable-group variable \
-            update --group-id 202 \
-            --org $(System.CollectionUri) \
-            --project $(System.TeamProject) \
-            --name tag --value $(Build.BuildId)
-          env:
-            AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
         - script: |
             git config --global user.email "mischa@pipeline.com"
             git config --global user.name "Mischa Pipeline"
@@ -39,6 +37,3 @@ stages:
             git add .
             git commit -m "Update tag value to $(passed_tag)"
             git push --set-upstream origin "$(passed_tag)"
-
-
-
