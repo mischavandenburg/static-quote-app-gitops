@@ -29,7 +29,7 @@ stages:
             sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
             git add .
             git commit -m "Update tag value to $(passed_tag)"
-            git push origin "update tag to $(passed_tag)"
+            git push --set-upstream origin "update tag to $(passed_tag)"
 
 
 
