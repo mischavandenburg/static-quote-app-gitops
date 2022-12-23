@@ -23,7 +23,12 @@ stages:
         - checkout: self
           persistCredentials: true
           clean: true
-        - bash: az pipelines variable-group variable update --group-id 202 --name tag --value '$(Build.BuildId)' 
+        - bash: |
+            az pipelines variable-group variable
+            update --group-id 202 
+            --org $(System.CollectionUri)
+            --project $(System.TeamProject)
+            --name tag --value $(Build.BuildId)
           env:
             AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
         - script: |
