@@ -22,6 +22,7 @@ stages:
         - script: echo $(passed_tag)
         - checkout: self
           persistCredentials: true
+          clean: true
         - script: |
             git config --global user.email "mischa@pipeline.com"
             git config --global user.name "Mischa Pipeline"
