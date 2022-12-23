@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: static-quote
 spec:
+  type: NodePort
   ports:
   - port: 5000
     targetPort: 5000
