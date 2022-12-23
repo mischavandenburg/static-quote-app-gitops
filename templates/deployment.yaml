@@ -14,7 +14,7 @@ spec:
         app: static-quote
     spec:
       containers:
-      - image: mischavandenburg/static-quote:{{ .Values.customTag }}
+      - image: {{ .Values.image_name }}:{{ .Values.image_tag }}
         name: static-quote
         ports:
-        - containerPort: 5000
+        - containerPort: {{ .Values.container_port }} 
