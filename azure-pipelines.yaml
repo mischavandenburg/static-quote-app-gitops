@@ -14,28 +14,26 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-stage: submit-pr
+stages:
+- stage: submit-pr
+  jobs:
+    - job: submit-pr
+      steps:
+        - script: echo $(passed_tag)
+        - checkout: self
+        - script: |
+            sed -i "s/tag:.*/tag: $(gitops_new_tag)/" values.yaml 
 
-jobs:
-  - job: submit-pr
+        - script: |
+            git add .
 
-    steps:
-      - script: echo $(passed_tag)
-      - checkout: self
-        persistCredentials: true
-      - script: |
-          sed -i "s/tag:.*/tag: $(gitops_new_tag)/" values.yaml 
+        # Commit the changes with a message
+        - script: |
+            git commit -m "Update tag value to $(passed_tag)"
 
-      - script: |
-          git add .
-
-      # Commit the changes with a message
-      - script: |
-          git commit -m "Update tag value to $(passed_tag)"
-
-      # Push the changes to the GitOps repository
-      - script: |
-          git push origin main
+        # Push the changes to the GitOps repository
+        - script: |
+            git push origin main
 
 
 
