@@ -33,7 +33,7 @@ stages:
         - script: |
             git config --global user.email "mischa@pipeline.com"
             git config --global user.name "Mischa Pipeline"
-            git switch -c "$(passed_tag)"
+            git switch -c "$(branch_name)"
             sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
             git add .
             git commit -m "Update tag to $(passed_tag)"
