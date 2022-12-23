@@ -23,6 +23,7 @@ stages:
         - checkout: self
           persistCredentials: true
           clean: true
+        - bash: az pipelines variable-group variable update --group-id 202 --name tag --value '$(Build.BuildId)' 
         - script: |
             git config --global user.email "mischa@pipeline.com"
             git config --global user.name "Mischa Pipeline"
