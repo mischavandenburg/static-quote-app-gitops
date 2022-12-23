@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+variables:
+- group: mischa-quote
+- name: passed_tag
+  value: $[variables.tag]
+
+pool:
+  vmImage: ubuntu-latest
+
+stage: submit-pr
+
+jobs:
+  - job: submit-pr
+
+    steps:
+      - script: echo $(passed_tag)
+      - checkout: self
+        persistCredentials: true
+      - script: |
+          sed -i "s/tag:.*/tag: $(gitops_new_tag)/" values.yaml 
+
+      - script: |
+          git add .
+
+      # Commit the changes with a message
+      - script: |
+          git commit -m "Update tag value to $(passed_tag)"
+
+      # Push the changes to the GitOps repository
+      - script: |
+          git push origin main
+
+
+
