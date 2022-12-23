@@ -23,14 +23,13 @@ stages:
         - checkout: self
           persistCredentials: true
         - script: |
-            sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
-
-        - script: |
             git config --global user.email "mischa@pipeline.com"
             git config --global user.name "Mischa Pipeline"
+            git switch -c "update tag to $(passed_tag)"
+            sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
             git add .
             git commit -m "Update tag value to $(passed_tag)"
-            git push origin main
+            git push origin "update tag to $(passed_tag)"
 
 
 
