@@ -15,9 +15,9 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: submit-pr
+- stage: submit_pr
   jobs:
-    - job: submit-pr
+    - job: submit_pr
       steps:
         - script: echo $(passed_tag)
         - checkout: self
