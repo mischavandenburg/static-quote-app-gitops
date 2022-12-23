@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-quote
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: static-quote
+  template:
+    metadata:
+      labels:
+        app: static-quote
+    spec:
+      containers:
+      - image: mischavandenburg/static-quote:94116
+        name: static-quote
+        ports:
+        - containerPort: 5000
