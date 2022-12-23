@@ -1,8 +1,7 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-#
+# This pipeline triggers when the image build finishes.
+# It checks out the GitOps repo and makes a new branch with the new tag in the deployment template.
+# By Mischa van den Burg
+
 trigger: none
 pr: none
 
@@ -10,22 +9,24 @@ resources:
   pipelines:
   - pipeline: image-build-pipeline # Name of the pipeline resource.
     source:  mischavandenburg.static-quote-app # The name of the pipeline referenced by this pipeline resource.
-    trigger: true # Run app-ci pipeline when any run of security-lib-ci completes
+    trigger: true
 
 variables:
 - group: mischa-quote
 - name: passed_tag
   value: $[variables.tag]
+- name: branch_name
+  value: "pipeline-$(passed_tag)"
 
 pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: submit_pr
+- stage: create_branch
+  displayName: Update tag and create new branch
   jobs:
-    - job: submit_pr
+    - job: create_branch
       steps:
-        - script: echo $(passed_tag)
         - checkout: self
           persistCredentials: true
           clean: true
@@ -35,5 +36,5 @@ stages:
             git switch -c "$(passed_tag)"
             sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
             git add .
-            git commit -m "Update tag value to $(passed_tag)"
-            git push --set-upstream origin "$(passed_tag)"
+            git commit -m "Update tag to $(passed_tag)"
+            git push --set-upstream origin "$(branch_name)"
