@@ -14,7 +14,7 @@ spec:
         app: static-quote
     spec:
       containers:
-      - image: mischavandenburg/static-quote:94116
+      - image: mischavandenburg/static-quote:94141
         name: static-quote
         ports:
         - containerPort: 5000
