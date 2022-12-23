@@ -21,18 +21,15 @@ stages:
       steps:
         - script: echo $(passed_tag)
         - checkout: self
+          persistCredentials: true
         - script: |
-            sed -i "s/tag:.*/tag: $(gitops_new_tag)/" values.yaml 
+            sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
 
         - script: |
+            git config --global user.email "mischa@pipeline.com"
+            git config --global user.name "Mischa Pipeline"
             git add .
-
-        # Commit the changes with a message
-        - script: |
             git commit -m "Update tag value to $(passed_tag)"
-
-        # Push the changes to the GitOps repository
-        - script: |
             git push origin main
 
 
