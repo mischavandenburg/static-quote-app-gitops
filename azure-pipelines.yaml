@@ -21,20 +21,15 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-stages:
-- stage: create_branch
-  displayName: Update tag and create new branch
-  jobs:
-    - job: create_branch
-      steps:
-        - checkout: self
-          persistCredentials: true
-          clean: true
-        - script: |
-            git config --global user.email "mischa@pipeline.com"
-            git config --global user.name "Mischa Pipeline"
-            git switch -c "$(branch_name)"
-            sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
-            git add .
-            git commit -m "Update tag to $(passed_tag)"
-            git push --set-upstream origin "$(branch_name)"
+steps:
+  - checkout: self
+    persistCredentials: true
+    clean: true
+  - script: |
+      git config --global user.email "mischa@pipeline.com"
+      git config --global user.name "Mischa Pipeline"
+      git switch -c "$(branch_name)"
+      sed -i "s/tag:.*/tag: $(passed_tag)/" values.yaml 
+      git add .
+      git commit -m "Update tag to $(passed_tag)"
+      git push --set-upstream origin "$(branch_name)"
